@@ -45,7 +45,7 @@ jobs:
         # Genera un SBOM a partir de requirements.txt
         run: |
           pip install cyclonedx-bom
-          cyclonedx-py env --output sbom.json
+          cyclonedx-py env > sbom.json
 
       - name: Publicar SBOM como artefacto
         uses: actions/upload-artifact@v4
