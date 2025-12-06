@@ -25,7 +25,6 @@ jobs:
       - name: Correr Pruebas (pytest)
         run: python -m pytest
 
-
 # --- JOB 2: SEGURIDAD (SBOM + Snyk) ---
   seguridad:
     needs: probar-y-lintear
@@ -46,7 +45,7 @@ jobs:
         # Genera un SBOM a partir de requirements.txt
         run: |
           pip install cyclonedx-bom
-          cyclonedx-py -o sbom.json -r requirements.txt
+          cyclonedx-py requirements -r requirements.txt -o sbom.json
 
       - name: Publicar SBOM como artefacto
         uses: actions/upload-artifact@v4
