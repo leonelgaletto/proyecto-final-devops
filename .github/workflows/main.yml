@@ -1,4 +1,3 @@
-# Añadido job de seguridad con SBOM y Snyk
 # Nombre del workflow
 name: CI/CD - Pruebas, Build y Despliegue
 
@@ -28,37 +27,37 @@ jobs:
 
 
 # --- JOB 2: SEGURIDAD (SBOM + Snyk) ---
-seguridad:
-  needs: probar-y-lintear
-  runs-on: ubuntu-latest
-  steps:
-    - name: Descargar el código
-      uses: actions/checkout@v4
+  seguridad:
+    needs: probar-y-lintear
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
 
-    - name: Configurar Python 3.9
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.9
+      - name: Configurar Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.9
 
-    - name: Instalar dependencias
-      run: pip install -r requirements.txt
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
 
-    - name: Generar SBOM CycloneDX
-      # Genera un SBOM a partir de requirements.txt
-      run: |
-        pip install cyclonedx-bom
-        cyclonedx-py -o sbom.json -r requirements.txt
+      - name: Generar SBOM CycloneDX
+        # Genera un SBOM a partir de requirements.txt
+        run: |
+          pip install cyclonedx-bom
+          cyclonedx-py -o sbom.json -r requirements.txt
 
-    - name: Publicar SBOM como artefacto
-      uses: actions/upload-artifact@v4
-      with:
-        name: sbom-cyclonedx
-        path: sbom.json
+      - name: Publicar SBOM como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-cyclonedx
+          path: sbom.json
 
-    - name: Escaneo de seguridad con Snyk
-      uses: snyk/actions/python@master
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - name: Escaneo de seguridad con Snyk
+        uses: snyk/actions/python@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
   # --- JOB 2: DESPLIEGUE CONTINUO (CD) ---
   construir-y-desplegar:
