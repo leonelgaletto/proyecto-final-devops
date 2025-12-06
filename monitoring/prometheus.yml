@@ -1,0 +1,20 @@
+# Archivo: monitoring/prometheus.yml
+
+global:
+  scrape_interval: 15s # Cada 15s irá a buscar métricas
+
+# Aquí definimos A QUÉ sitios ir a buscar
+scrape_configs:
+  # "Job" 1: Ir a buscarse a sí mismo (a Prometheus)
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # "Job" 2: ¡Ir a buscar nuestra App de Flask! (¡EL IMPORTANTE!)
+  - job_name: "mi-app-flask"
+    static_configs:
+      # OJO: No podemos usar "localhost" porque estamos DENTRO de un contenedor.
+      # Usamos "host.docker.internal" que es un truco para que Docker
+      # "salga" del contenedor y vea la app que corre en el host (en tu servidor).
+      # ¡Y le decimos que la app está en el puerto 5001!
+      - targets: ["host.docker.internal:5001"]

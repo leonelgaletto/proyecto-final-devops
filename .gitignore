@@ -1,0 +1,18 @@
+# Python (lo que ya teníamos)
+venv/
+__pycache__/
+*.pyc
+
+# Terraform (¡LO NUEVO!)
+# Ignora la carpeta que contiene los plugins (¡el archivo de 648MB!)
+.terraform/
+
+# Ignora los archivos de "estado" (pueden contener secretos)
+terraform.tfstate
+terraform.tfstate.backup
+
+# Ignora los archivos de "plan" (también pueden tener data sensible)
+*.tfplan
+
+# macOS
+.DS_Store

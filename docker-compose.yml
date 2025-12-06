@@ -1,0 +1,41 @@
+version: '3.8'
+
+# Define los "servicios" (contenedores) que queremos correr
+services:
+  # --- Servicio 1: Prometheus (El que recolecta) ---
+  prometheus:
+    image: prom/prometheus:v2.47.2
+    container_name: prometheus
+    ports:
+      - "9090:9090" # Exponemos el puerto 9090 de Prometheus
+    volumes:
+      # Montamos nuestro archivo de config dentro del contenedor
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    # Le decimos a Prometheus que use ese archivo de config
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    # Lo conectamos a la red "monitoring-net"
+    networks:
+      - monitoring-net
+
+  # --- Servicio 2: Grafana (El que dibuja) ---
+  grafana:
+    image: grafana/grafana-oss:10.1.5
+    container_name: grafana
+    ports:
+      - "3000:3000" # Exponemos el puerto 3000 de Grafana
+    # Grafana guarda sus dashboards en esta carpeta
+    volumes:
+      - grafana-data:/var/lib/grafana
+    # Lo conectamos a la red "monitoring-net"
+    networks:
+      - monitoring-net
+
+# Define la red que usarán para "verse" entre ellos
+networks:
+  monitoring-net:
+    driver: bridge
+
+# Define el "volumen" (disco duro) para que Grafana no pierda sus datos
+volumes:
+  grafana-data:
