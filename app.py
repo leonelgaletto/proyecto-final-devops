@@ -19,7 +19,7 @@ def home():
     """Ruta principal que muestra el mensaje de bienvenida."""
     # Incrementamos el contador cada vez que alguien visita la página
     home_visits_counter.inc()
-    return "¡Hola! Esta es la aplicación base del Proyecto 1."
+    return "¡Hola! Esta es la aplicación base del Proyecto 1. ¡Versión 2!"
 
 
 @app.route('/health')
