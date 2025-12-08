@@ -125,6 +125,10 @@ jobs:
             echo "services:" >> docker-compose.yml
             
             # --- Servicio 1: Nuestra App Flask ---
+            echo "Eliminando contenedores previos…"
+            docker compose down --volumes --remove-orphans || true
+            echo "Eliminando contenedor previo de mi-app si existe…"
+            docker rm -f mi-app || true
             echo "  mi-app:" >> docker-compose.yml
             # ¡Importante! Usamos la imagen que acabamos de subir a Docker Hub
             echo "    image: ${{ secrets.DOCKERHUB_USERNAME }}/proyecto-diplomatura:latest" >> docker-compose.yml
