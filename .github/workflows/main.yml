@@ -164,4 +164,5 @@ jobs:
             # Descargamos la imagen más nueva de nuestra app (para asegurarnos)
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/proyecto-diplomatura:latest
             # (docker-compose se encarga de parar y recrear solo lo que cambió)
+            docker compose down --remove-orphans --volumes
             docker-compose up -d
