@@ -93,10 +93,11 @@ jobs:
           host: ${{ secrets.AWS_SERVER_IP }}
           username: ${{ secrets.AWS_SERVER_USER }}
           key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
-          script_stop: true
-          
+
           # ¡Este es el script que se ejecutará DENTRO de tu servidor AWS!
           script: |
+            set -e   # <--- ESTO ES LA CLAVE PARA CORTAR EL PIPELINE
+            
             # --- 1. Instalar Docker Compose (si falta) ---
             echo "--- Instalando Docker Compose ---"
             sudo apt-get update -y
