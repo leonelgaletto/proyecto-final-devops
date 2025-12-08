@@ -21,6 +21,7 @@ data "aws_caller_identity" "current" {}
 resource "aws_security_group" "web_sg" {
   name        = "proyecto1-sg"
   description = "Firewall para el Proyecto 1 (permite SSH y HTTP)"
+  vpc_id = aws_vpc.proyecto_vpc.id
 
   # Permite SSH (puerto 22) desde cualquier IP
   ingress {
@@ -38,8 +39,6 @@ resource "aws_security_group" "web_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-# --- ¡¡AQUÍ ESTÁ LA CORRECCIÓN!! ---
-  
   # Permite Grafana (puerto 3000) desde cualquier IP
   ingress {
     from_port   = 3000
@@ -87,7 +86,8 @@ data "aws_ami" "ubuntu" {
 resource "aws_instance" "web_server" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t2.micro" # Parte de la capa gratuita de AWS
-  key_name      = "mi-llave-aws." # El nombre de la llave que importamos
+  key_name      = "mi-llave-aws" # El nombre de la llave que importamos
+  subnet_id = aws_subnet.proyecto_subnet.id
   vpc_security_group_ids = [aws_security_group.web_sg.id]
   
   # Este script se correrá la primera vez que arranque el servidor
