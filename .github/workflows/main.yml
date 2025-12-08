@@ -93,6 +93,7 @@ jobs:
           host: ${{ secrets.AWS_SERVER_IP }}
           username: ${{ secrets.AWS_SERVER_USER }}
           key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
+          script_stop: true
 
           # ¡Este es el script que se ejecutará DENTRO de tu servidor AWS!
           script: |
@@ -126,7 +127,7 @@ jobs:
             
             # --- Servicio 1: Nuestra App Flask ---
             echo "Eliminando contenedores previos…"
-            docker compose down --volumes --remove-orphans || true
+            docker-compose down --volumes --remove-orphans || true
             echo "Eliminando contenedor previo de mi-app si existe…"
             docker rm -f mi-app || true
             echo "  mi-app:" >> docker-compose.yml
