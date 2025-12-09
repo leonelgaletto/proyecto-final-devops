@@ -86,14 +86,13 @@ jobs:
           # Le ponemos un "tag" (etiqueta) usando nuestro usuario de Docker Hub
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/proyecto-diplomatura:latest
 
-      # 4. Desplegar TODO en el Servidor AWS
+      # 4. Desplegar en el Servidor AWS
       - name: Desplegar Stack Completo en AWS
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.AWS_SERVER_IP }}
           username: ${{ secrets.AWS_SERVER_USER }}
           key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
-          script_stop: true
 
           # ¡Este es el script que se ejecutará DENTRO de tu servidor AWS!
           script: |
@@ -126,10 +125,10 @@ jobs:
             echo "services:" >> docker-compose.yml
             
             # --- Servicio 1: Nuestra App Flask ---
-            echo "Eliminando contenedores previos…"
-            docker-compose down --volumes --remove-orphans || true
-            echo "Eliminando contenedor previo de mi-app si existe…"
-            docker rm -f mi-app || true
+            echo "Limpiando contenedores previos..."
+            docker compose down --volumes --remove-orphans || true
+            echo "Prune general de contenedores en estado zombie..."
+            docker container prune -f || true
             echo "  mi-app:" >> docker-compose.yml
             # ¡Importante! Usamos la imagen que acabamos de subir a Docker Hub
             echo "    image: ${{ secrets.DOCKERHUB_USERNAME }}/proyecto-diplomatura:latest" >> docker-compose.yml
