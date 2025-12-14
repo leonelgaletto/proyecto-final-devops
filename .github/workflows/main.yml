@@ -97,12 +97,11 @@ jobs:
           # ¡Este es el script que se ejecutará DENTRO de tu servidor AWS!
           script: |
             set -e   # <--- ESTO ES LA CLAVE PARA CORTAR EL PIPELINE
-
+            
             # --- 1. Instalar Docker Compose (si falta) ---
-            echo "--- Instalando Docker Compose"
+            echo "--- Instalando Docker Compose ---"
             sudo apt-get update -y
-            sudo apt-get install -y docker-compose-plugin
-            docker compose version
+            sudo apt-get install -y docker-compose
 
             # --- 2. Crear la carpeta de monitoreo ---
             mkdir -p monitoring
@@ -124,7 +123,7 @@ jobs:
             echo "--- Creando docker-compose.yml ---"
             echo "version: '3.8'" > docker-compose.yml
             echo "services:" >> docker-compose.yml
-
+            
             # --- Servicio 1: Nuestra App Flask ---
             echo "Limpiando contenedores previos..."
             docker compose down --volumes --remove-orphans || true
@@ -171,5 +170,5 @@ jobs:
             # Descargamos la imagen más nueva de nuestra app (para asegurarnos)
             docker container prune -f || true
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/proyecto-diplomatura:latest
-            # (docker compose se encarga de parar y recrear solo lo que cambió)
-            docker compose up -d
+            # (docker-compose se encarga de parar y recrear solo lo que cambió)
+            docker-compose up -d
