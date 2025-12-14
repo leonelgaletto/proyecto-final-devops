@@ -1,4 +1,4 @@
-Flask
-pytest
-prometheus-client
-flake8
+Flask==2.3.3
+prometheus-client==0.17.1
+pytest==8.1.1
+flake8==7.0.0
