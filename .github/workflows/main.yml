@@ -126,7 +126,7 @@ jobs:
             
             # --- Servicio 1: Nuestra App Flask ---
             echo "Limpiando contenedores previos..."
-            docker compose down --volumes --remove-orphans || true
+            docker-compose down --volumes --remove-orphans || true
             echo "Prune general de contenedores en estado zombie..."
             docker container prune -f || true
             echo "  mi-app:" >> docker-compose.yml
@@ -169,6 +169,7 @@ jobs:
             echo "--- Desplegando stack completo (App + Monitoreo) ---"
             # Descargamos la imagen más nueva de nuestra app (para asegurarnos)
             docker container prune -f || true
+            docker-compose down --volumes --remove-orphans || true
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/proyecto-diplomatura:latest
             # (docker-compose se encarga de parar y recrear solo lo que cambió)
             docker-compose up -d
