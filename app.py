@@ -12,7 +12,7 @@ app = Flask(__name__)
 def home():
     """Ruta principal que muestra el mensaje de bienvenida."""
     home_visits_counter.inc()
-    return "¡Hola! Esta es la aplicación base del Proyecto 1 de Leonel Galetto y Justo Suárez Villalobos."
+    return "¡Hola! Esta es la aplicación base del Proyecto 1."
 
 
 @app.route('/health')
