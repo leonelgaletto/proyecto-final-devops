@@ -4,8 +4,8 @@
 ## Resumen
 
 Este proyecto implementa una aplicación Flask muy simple, containerizada con Docker, desplegada mediante un pipeline de GitHub Actions a una instancia en AWS gestionada con Terraform. 
-Cada corrida en el pipeline que finaliza correctamente, actualiza la aplicación con la imagen más nueva.
-Además, incluye monitoreo con Prometheus + Grafana y controles de seguridad en el pipeline (linter, tests, SBOM y Snyk).
+Cada corrida en el pipeline que finaliza correctamente, actualiza la aplicación con la imagen construida recientemente.
+Además, incluye monitoreo con Prometheus + Grafana y controles de seguridad en el pipeline (linter, tests, SBOM, Snyk y Trivy).
 
 ## Componentes principales
 
