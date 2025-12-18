@@ -52,11 +52,12 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      - name: Scan Docker image with Trivy
+      - name: Escaneo de Docker image con Trivy
         uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/proyecto-diplomatura:latest
           format: table
+          exit-code: 1
           severity: CRITICAL,HIGH
 
   construir-y-desplegar:
