@@ -217,6 +217,10 @@ Configurar por primera vez Grafana + Prometheus en la nube:
 
 ![vulnerabilidad-snyk.png](images/cases-and-validations/vulnerabilidad-snyk.png)
 
+5. Imagen de Docker insegura, validación con Trivy: cambiar el dockerfile y usar `FROM python:3.9-slim-buster`. Esta versión tiene ciertas vulnerabilidades HIGH.
+
+![trivy-validation.png](images/cases-and-validations/trivy-validation.png)
+
 5. Validar las métricas en Grafana. Por ejemplo, entrar muchas veces a nuestra aplicación.
 
    **EXPECTED**: el contador de la métrica 'home_visits_counter' sube y se ve reflejado en el gráfico del dashboard.
@@ -234,41 +238,6 @@ Para entrar por ssh a nuestra instancia en aws necesitamos:
 Steps:
 1) `ssh -i Downloads/mi-llave-aws.pem ubuntu@100.48.108.96` donde Downloads/mi-llave-aws.pem es el path donde se encuentra la llave, ubuntu es el user y 100.48.108.96 es la public_ip
 2) Una vez ingresado, validar los servicios levantados con `docker ps`
+3) Validar servicios levantados
 
-
-
-## 4. Entregables según la consigna
-
-- **Workflow GitHub Actions (.yml)**  
-  - `.github/workflows/main.yml`
-
-- **Archivos Terraform (.tf)**  
-  - `terraform/main.tf`
-  - `terraform/install_docker.sh`
-
-- **Dockerfile e imagen**  
-  - `Dockerfile` (imagen build/push desde el pipeline)
-
-- **SBOM**  
-  - `sbom.json` generado por el job de seguridad (publicado como artefacto).
-
-- **Dashboard de métricas**  
-  - Prometheus + Grafana via `docker-compose.yml` y `monitoring/prometheus.yml`.
-  - Captura de pantalla a ser agregada al README por el alumno.
-
-## 10. Cómo empaquetar para entregar
-
-Desde la raíz del proyecto:
-
-```bash
-cd ..
-zip -r "Proyecto1_EquipoX.zip" proyecto-diplomatura
-```
-
-Asegurate de incluir:
-- Código fuente
-- Terraform
-- Dockerfile
-- Workflow de GitHub Actions
-- README
-- Capturas de Prometheus/Grafana
+![ssh-ingress.png](images/cloud/ssh-ingress.png)
