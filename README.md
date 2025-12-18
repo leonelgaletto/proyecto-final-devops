@@ -209,7 +209,7 @@ Configurar por primera vez Grafana + Prometheus en la nube:
 
     **EXPECTED**: el pipeline falla en la etapa 1 por inconsistencias de funciones deprecadas.
 
-
+![old-version-flake.png](images/cases-and-validations/old-version-flake.png)
 
 4. Vulnerabilidades en Snyk: poner una versión vulnerable en el 'requirements.txt', por ejemplo: setuptools==65.5.0, y pushear. 
 
