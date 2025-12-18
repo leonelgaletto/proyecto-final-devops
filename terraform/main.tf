@@ -12,12 +12,10 @@ provider "aws" {
   region = "us-east-1"
 }
 
-# --- BLOQUE DE DIAGNÓSTICO (¡NUEVO!) ---
-# Le pedimos a AWS: "¿Quién soy? ¿Con qué cuenta estoy hablando?"
 data "aws_caller_identity" "current" {}
 
 
-# --- BLOQUE 2: FIREWALL (SECURITY GROUP) ---
+# --- BLOQUE 2: SECURITY GROUP ---
 resource "aws_security_group" "web_sg" {
   name        = "proyecto1-sg"
   description = "Firewall para el Proyecto 1 (permite SSH y HTTP)"
@@ -55,7 +53,7 @@ resource "aws_security_group" "web_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Permite todo el tráfico saliente
+  # Permite el tráfico saliente
   egress {
     from_port   = 0
     to_port     = 0
@@ -104,8 +102,6 @@ output "public_ip" {
   value       = aws_instance.web_server.public_ip
 }
 
-# --- OUTPUT DE DIAGNÓSTICO (¡NUEVO!) ---
-# Le pedimos a Terraform que nos muestre el ID de la cuenta que está usando.
 output "terraform_account_id" {
   description = "El ID de la cuenta que Terraform está usando"
   value       = data.aws_caller_identity.current.account_id
