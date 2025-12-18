@@ -22,7 +22,7 @@ def test_health(client):
     """Prueba que la ruta '/health' devuelva 'OK' y un 200."""
     # (2 líneas en blanco antes de la función)
     rv = client.get('/health')
-    assert rv.status_code == 201
+    assert rv.status_code == 200
     assert b"OK" in rv.data
 
 
