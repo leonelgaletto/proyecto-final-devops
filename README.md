@@ -155,13 +155,17 @@ Dependencias entre jobs:
 probar-y-lintear  ->  seguridad  ->  construir-y-desplegar
 ```
 
+![github-actions.png](images/cloud/github-actions.png)
+
 A partir de que pusheemos este pipeline y termine correctamente, vamos a poder ingresar a nuestros servicios en la nube.
 
-https://public_ip -> aplicación principal
+http://public_ip -> aplicación principal
 
-https://public_ip:9090 -> Prometheus
+http://public_ip:9090 -> Prometheus
 
-https://public_ip:3000 -> Grafana. (usuario/password por defecto: `admin` / `admin`)
+http://public_ip:3000 -> Grafana. (usuario/password por defecto: `admin` / `admin`)
+
+
 
 ### 3. Seguridad
 
@@ -172,13 +176,21 @@ La sección de seguridad del pipeline incluye:
 - SBOM (CycloneDX) → inventario de dependencias en `sbom.json`.
 - Snyk → análisis de vulnerabilidades en dependencias (SCA).
 
+![probar-lintear.png](images/cloud/probar-lintear.png)
+![seguridad.png](images/cloud/seguridad.png)
+![despliegue.png](images/cloud/despliegue.png)
+
 ### 4. Monitoreo
 
 Configurar por primera vez Grafana + Prometheus en la nube:
 
-1. Loguearse en Grafana https://public_ip:3000
-2. Vincular el datasource correcto a Grafana (en nuestro caso va a ser Prometheus).
-3. Armar un dashboard. Nosotros usamos un json preconfigurado y lo importamos (monitoring/dashboard.json).
+1. Loguearse en Grafana http://public_ip:3000
+2. Vincular el datasource correcto a Grafana (en nuestro caso va a ser Prometheus). En http://public_ip:3000/connections/datasources/new y vamos a llenar el valor "Prometheus server URL" con http:public-ip:9090 (que es nuestro servicio de Prometheus). Apretar 'Save'.
+
+![datasource.png](images/cloud/datasource.png)
+
+3. Armar un dashboard. Nosotros usamos un json preconfigurado y lo importamos (monitoring/dashboard.json) en http://public-ip:3000/dashboard/import .
+![dashboard-grafana.png](images/cloud/dashboard-grafana.png)
 
 ## Fase 3: Casos de prueba y validaciones funcionales
 
@@ -205,8 +217,10 @@ Configurar por primera vez Grafana + Prometheus en la nube:
 
 
 
+## 4. Info adicional
 
-
+- entrar por ssh al servidor y validar los servicios levantados
+- 
 
 
 
