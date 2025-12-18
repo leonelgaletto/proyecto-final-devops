@@ -215,18 +215,25 @@ Configurar por primera vez Grafana + Prometheus en la nube:
 
     **EXPECTED**: el pipeline falla en la etapa 2
 
+![vulnerabilidad-snyk.png](images/cases-and-validations/vulnerabilidad-snyk.png)
+
 5. Validar las métricas en Grafana. Por ejemplo, entrar muchas veces a nuestra aplicación.
 
    **EXPECTED**: el contador de la métrica 'home_visits_counter' sube y se ve reflejado en el gráfico del dashboard.
 
+![dashboard-grafana.png](images/cloud/dashboard-grafana.png)
 
 
+## Info adicional
+### Entrar por ssh al servidor y validar los servicios levantados
+Para entrar por ssh a nuestra instancia en aws necesitamos: 
+- Archivo .pem descargado en nuestra máquina, que es el key pair que creamos en AWS para validar nuestro ingress
+- El nombre del usuario, en nuestro caso es 'ubuntu'
+- La public_ip que nos proveyó Terraform en la fase 1.
 
-
-## 4. Info adicional
-
-- entrar por ssh al servidor y validar los servicios levantados
-- 
+Steps:
+1) `ssh -i Downloads/mi-llave-aws.pem ubuntu@100.48.108.96` donde Downloads/mi-llave-aws.pem es el path donde se encuentra la llave, ubuntu es el user y 100.48.108.96 es la public_ip
+2) Una vez ingresado, validar los servicios levantados con `docker ps`
 
 
 
