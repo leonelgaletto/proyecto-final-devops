@@ -21,7 +21,6 @@ def home():
     home_visits_counter.inc()
     return "¡Hola! Esta es la aplicación base del Proyecto 1."
 
-
 @app.route('/health')
 def health_check():
     """Ruta de 'health check' para monitoreo."""
