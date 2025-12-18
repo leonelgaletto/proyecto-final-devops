@@ -175,6 +175,7 @@ La sección de seguridad del pipeline incluye:
 - Tests (`pytest`) → validación funcional.
 - SBOM (CycloneDX) → inventario de dependencias en `sbom.json`.
 - Snyk → análisis de vulnerabilidades en dependencias (SCA).
+- Trivy -> análisis de imágenes docker.
 
 ![probar-lintear.png](images/cloud/probar-lintear.png)
 ![seguridad.png](images/cloud/seguridad.png)
