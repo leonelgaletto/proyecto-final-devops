@@ -197,6 +197,8 @@ Configurar por primera vez Grafana + Prometheus en la nube:
 1. Linteo incorrecto: dejamos menos de 2 líneas en blanco antes de alguna función y pusheamos el cambio, esto genera un error de estilo.
 
     **EXPECTED**: el pipeline falla en la etapa 1
+
+![linter-flake-error.png](images/cases-and-validations/linter-flake-error.png)
 2. Test fallido: en lugar de esperar un 200, esperar otro resultado y pushear el cambio. 
 
     **EXPECTED**: el pipeline falla en la etapa 1 cuando quiere correr el test.
