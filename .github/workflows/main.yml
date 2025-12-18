@@ -52,14 +52,6 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      - name: Escaneo de Docker image con Trivy
-        uses: aquasecurity/trivy-action@0.20.0
-        with:
-          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/proyecto-diplomatura:latest
-          format: table
-          exit-code: 1
-          severity: CRITICAL,HIGH
-
   construir-y-desplegar:
     needs: [probar-y-lintear, seguridad]
     runs-on: ubuntu-latest
@@ -80,6 +72,14 @@ jobs:
           context: . # Usa el Dockerfile en la raíz
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/proyecto-diplomatura:latest
+
+      - name: Escaneo de Docker image con Trivy
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/proyecto-diplomatura:latest
+          format: table
+          exit-code: 1
+          severity: CRITICAL,HIGH
 
       - name: Desplegar Stack Completo en AWS
         uses: appleboy/ssh-action@master
