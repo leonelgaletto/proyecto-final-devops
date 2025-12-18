@@ -1,0 +1,159 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Visitas totales al Home",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "home_visits_total",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center"
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 }
+    },
+
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Visitas por segundo",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(home_visits_total[1m])",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 4, "y": 0 }
+    },
+
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "Uptime (segundos)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "time() - process_start_time_seconds",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 4 }
+    },
+
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "CPU del proceso Flask",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(process_cpu_seconds_total[1m])",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 4, "y": 8 }
+    },
+
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "Memoria usada (RSS)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "process_resident_memory_bytes",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 4, "y": 16 }
+    },
+
+    {
+      "id": 6,
+      "type": "timeseries",
+      "title": "Garbage Collector — objetos recolectados",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "python_gc_objects_collected_total",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 4, "y": 24 }
+    },
+
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "File Descriptors abiertos",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "process_open_fds",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "h": 6, "w": 12, "x": 4, "y": 32 }
+    },
+
+    {
+      "id": 8,
+      "type": "stat",
+      "title": "Versión de Python",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "python_info",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "orientation": "horizontal",
+        "colorMode": "none"
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 8 }
+    }
+  ],
+
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["flask", "prometheus", "python"],
+  "templating": { "list": [] },
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Dashboard — Proyecto Flask con Prometheus",
+  "version": 1,
+  "weekStart": ""
+}

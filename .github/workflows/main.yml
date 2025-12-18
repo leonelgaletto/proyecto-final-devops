@@ -1,14 +1,10 @@
-# Nombre del workflow
 name: CI/CD - Pruebas, Build y Despliegue
 
-# --- DISPARADOR ---
 on:
   push:
     branches: [ "master" ]
 
-# --- TAREAS (JOBS) ---
 jobs:
-  # --- JOB 1: INTEGRACIÓN CONTINUA (CI) ---
   probar-y-lintear:
     runs-on: ubuntu-latest
     steps:
@@ -25,7 +21,6 @@ jobs:
       - name: Correr Pruebas (pytest)
         run: python -m pytest
 
-# --- JOB 2: SEGURIDAD (SBOM + Snyk) ---
   seguridad:
     needs: probar-y-lintear
     runs-on: ubuntu-latest
@@ -42,7 +37,6 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Generar SBOM CycloneDX
-        # Genera un SBOM a partir de requirements.txt
         run: |
           pip install cyclonedx-bom
           cyclonedx-py env > sbom.json
@@ -58,35 +52,27 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-  # --- JOB 2: DESPLIEGUE CONTINUO (CD) ---
   construir-y-desplegar:
-    # Este job "depende" de CI y Seguridad. Solo corre si ambos fueron exitosos
     needs: [probar-y-lintear, seguridad]
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Descargamos el código de nuevo
       - name: Descargar el código
         uses: actions/checkout@v4
 
-      # 2. Iniciar sesión en Docker Hub
-      # Usamos los "Secretos" que creamos en GitHub
       - name: Iniciar sesión en Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 3. Construir y Subir la Imagen a Docker Hub
       - name: Construir y Subir la Imagen a Docker Hub
         uses: docker/build-push-action@v5
         with:
           context: . # Usa el Dockerfile en la raíz
-          push: true  # "push" (subir) la imagen
-          # Le ponemos un "tag" (etiqueta) usando nuestro usuario de Docker Hub
+          push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/proyecto-diplomatura:latest
 
-      # 4. Desplegar en el Servidor AWS
       - name: Desplegar Stack Completo en AWS
         uses: appleboy/ssh-action@master
         with:
@@ -94,19 +80,16 @@ jobs:
           username: ${{ secrets.AWS_SERVER_USER }}
           key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
 
-          # ¡Este es el script que se ejecutará DENTRO de tu servidor AWS!
+          # ¡Este es el script que se ejecutará DENTRO del servidor AWS!
           script: |
-            set -e   # <--- ESTO ES LA CLAVE PARA CORTAR EL PIPELINE
+            set -e
             
-            # --- 1. Instalar Docker Compose (si falta) ---
             echo "--- Instalando Docker Compose ---"
             sudo apt-get update -y
             sudo apt-get install -y docker-compose
 
-            # --- 2. Crear la carpeta de monitoreo ---
             mkdir -p monitoring
 
-            # --- 3. Recrear el prometheus.yml ---
             echo "--- Creando prometheus.yml ---"
             echo "global:" > monitoring/prometheus.yml
             echo "  scrape_interval: 15s" >> monitoring/prometheus.yml
@@ -119,18 +102,15 @@ jobs:
             echo "      # ¡La nueva configuración! Apunta al nombre del servicio 'mi-app'" >> monitoring/prometheus.yml
             echo "      - targets: ['mi-app:5001']" >> monitoring/prometheus.yml
 
-            # --- 4. Recrear el docker-compose.yml (¡AHORA CON LOS 3 SERVICIOS!) ---
             echo "--- Creando docker-compose.yml ---"
             echo "version: '3.8'" > docker-compose.yml
             echo "services:" >> docker-compose.yml
             
-            # --- Servicio 1: Nuestra App Flask ---
             echo "Limpiando contenedores previos..."
             docker-compose down --volumes --remove-orphans || true
             echo "Prune general de contenedores en estado zombie..."
             docker container prune -f || true
             echo "  mi-app:" >> docker-compose.yml
-            # ¡Importante! Usamos la imagen que acabamos de subir a Docker Hub
             echo "    image: ${{ secrets.DOCKERHUB_USERNAME }}/proyecto-diplomatura:latest" >> docker-compose.yml
             echo "    container_name: mi-app" >> docker-compose.yml
             echo "    ports:" >> docker-compose.yml
@@ -139,7 +119,6 @@ jobs:
             echo "    networks: [app-monitoring-net]" >> docker-compose.yml
             echo "    restart: always" >> docker-compose.yml
 
-            # --- Servicio 2: Prometheus ---
             echo "  prometheus:" >> docker-compose.yml
             echo "    image: prom/prometheus:v2.47.2" >> docker-compose.yml
             echo "    container_name: prometheus" >> docker-compose.yml
@@ -149,7 +128,6 @@ jobs:
             echo "    networks: [app-monitoring-net]" >> docker-compose.yml
             echo "    restart: always" >> docker-compose.yml
 
-            # --- Servicio 3: Grafana ---
             echo "  grafana:" >> docker-compose.yml
             echo "    image: grafana/grafana-oss:10.1.5" >> docker-compose.yml
             echo "    container_name: grafana" >> docker-compose.yml
@@ -158,16 +136,13 @@ jobs:
             echo "    networks: [app-monitoring-net]" >> docker-compose.yml
             echo "    restart: always" >> docker-compose.yml
 
-            # --- Red y Volúmenes ---
             echo "networks:" >> docker-compose.yml
             echo "  app-monitoring-net:" >> docker-compose.yml
             echo "    driver: bridge" >> docker-compose.yml
             echo "volumes:" >> docker-compose.yml
             echo "  grafana-data:" >> docker-compose.yml
 
-            # --- 5. Desplegar todo el stack ---
             echo "--- Desplegando stack completo (App + Monitoreo) ---"
-            # Descargamos la imagen más nueva de nuestra app (para asegurarnos)
             docker container prune -f || true
             docker-compose down --volumes --remove-orphans || true
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/proyecto-diplomatura:latest
